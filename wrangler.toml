@@ -7,3 +7,4 @@ workers_dev = false
 [[r2_buckets]]
 binding = "WEB"
 bucket_name = "web"
+preview_bucket_name = "web-dev"
