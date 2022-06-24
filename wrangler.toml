@@ -1,4 +1,9 @@
 name = "web-bucket"
+account_id = "bc4564dd499c0a9b8a7bb79c9bd5ea6d"
 main = "./index.js"
 compatibility_date = "2022-06-24"
 workers_dev = false
+
+[[r2_buckets]]
+binding = "WEB"
+bucket_name = "web"
