@@ -1,0 +1,4 @@
+name = "web-bucket"
+main = "./index.js"
+compatibility_date = "2022-06-24"
+workers_dev = false
