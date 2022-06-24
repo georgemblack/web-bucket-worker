@@ -19,5 +19,5 @@ export default {
 
 function authorized(request, env) {
   const token = request.headers.get("X-Auth-Token");
-  return token === ACCESS_TOKEN;
+  return token === env.ACCESS_TOKEN;
 }
