@@ -1,6 +1,6 @@
 export default {
   async fetch(request, env) {
-    if (!["GET", "PUT"].includes(request.method)) {
+    if (!["GET", "PUT", "DELETE"].includes(request.method)) {
       return new Response("Method not allowed", { status: 405 });
     }
     if (!authorized(request, env)) {
@@ -20,7 +20,15 @@ export default {
       const pathname = new URL(request.url).pathname;
       const objectKey = pathname.replace(/^\/+/, "");
       await env.WEB.put(objectKey, request.body);
-      return new Response("Success");
+      return new Response("Success", { status: 201 });
+    }
+
+    // Delete object, using URL to determine object key
+    if (request.method === "DELETE") {
+      const pathname = new URL(request.url).pathname;
+      const objectKey = pathname.replace(/^\/+/, "");
+      await env.WEB.delete(objectKey);
+      return new Response("Success", { status: 204 });
     }
   },
 };
