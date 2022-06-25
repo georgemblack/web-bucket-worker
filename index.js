@@ -34,6 +34,6 @@ export default {
 };
 
 function authorized(request, env) {
-  const token = request.headers.get("X-Auth-Token");
+  const token = request.headers.get("X-Access-Token");
   return token === env.ACCESS_TOKEN;
 }
