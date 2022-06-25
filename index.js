@@ -94,7 +94,7 @@ function generateHttpMetadata(objectKey) {
   if (["css", "js"].includes(extension)) seconds = "172800";
 
   return {
-    contentType: map.get(extension) || "application/octet-stream",
+    contentType: mimeTypes.get(extension) || "application/octet-stream",
     cacheControl: `public, max-age=${seconds}`,
   };
 }
