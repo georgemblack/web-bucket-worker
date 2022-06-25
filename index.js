@@ -19,7 +19,9 @@ export default {
     if (request.method === "PUT") {
       const pathname = new URL(request.url).pathname;
       const objectKey = pathname.replace(/^\/+/, "");
-      await env.WEB.put(objectKey, request.body);
+      await env.WEB.put(objectKey, request.body, {
+        httpMetadata: generateHttpMetadata(objectKey),
+      });
       return new Response("Success", { status: 201 });
     }
 
@@ -33,7 +35,65 @@ export default {
   },
 };
 
+const mimeTypes = new Map([
+  ["aac", "audio/aac"],
+  ["arc", "application/x-freearc"],
+  ["avi", "video/x-msvideo"],
+  ["avif", "image/avif"],
+  ["css", "text/css"],
+  ["csv", "text/csv"],
+  ["doc", "application/msword"],
+  [
+    "docx",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  ],
+  ["gz", "application/gzip"],
+  ["gpx", "application/gpx+xml"],
+  ["gif", "image/gif"],
+  ["html", "text/html"],
+  ["ico", "image/vnd.microsoft.icon"],
+  ["ics", "text/calendar"],
+  ["jpeg", "image/jpeg"],
+  ["jpg", "image/jpeg"],
+  ["js", "text/javascript"],
+  ["json", "application/json; charset=utf-8"],
+  ["mid", "audio/x-midi"],
+  ["midi", "audio/x-midi"],
+  ["mpeg", "video/mpeg"],
+  ["png", "image/png"],
+  ["pdf", "application/pdf"],
+  ["rar", "application/vnd.rar"],
+  ["rtf", "application/rtf"],
+  ["sh", "application/x-sh"],
+  ["svg", "image/svg+xml"],
+  ["tar", "application/x-tar"],
+  ["tif", "image/tiff"],
+  ["tiff", "image/tiff"],
+  ["txt", "text/plain"],
+  ["usdz", "model/usd"],
+  ["wav", "audio/wav"],
+  ["weba", "audio/webm"],
+  ["webm", "video/webm"],
+  ["webp", "image/webp"],
+  ["xhtml", "application/xhtml+xml"],
+  ["xml", "application/xml"],
+  ["zip", "application/zip"],
+]);
+
 function authorized(request, env) {
   const token = request.headers.get("X-Access-Token");
   return token === env.ACCESS_TOKEN;
+}
+
+function generateHttpMetadata(objectKey) {
+  const extension = objectKey.split(".").pop();
+
+  let seconds = "2592000";
+  if (["html", "xml", "json", "txt"].includes(extension)) seconds = "900";
+  if (["css", "js"].includes(extension)) seconds = "172800";
+
+  return {
+    contentType: map.get(extension) || "application/octet-stream",
+    cacheControl: `public, max-age=${seconds}`,
+  };
 }
